@@ -1,0 +1,141 @@
+body{
+
+	margin:0 0 0 0;
+
+}
+h1{
+	font-size:18px;
+	font-family:"Georgia",Verdana,Lucida,Helvetica,Arial,sans-serif;
+	color:#666;
+	text-align:rigth;
+	margin:10px 5px 5px 0px;
+}
+#menu{
+	width:130px;
+	height:400px;
+	float:left;
+	position:absolute;
+	border-right: 5px solid red;
+	font-size:12px;
+}
+#logo{
+	margin-top:10px;
+}
+.box{
+	margin: auto auto;
+	border:0px solid #CCC;
+	background-color:#FFF;
+	width:700px;
+	text-align:left;
+}
+.memotest, .encastres, .puzzle{
+	border:0px solid #CCC;
+	background-color:#FFF;
+	text-align:left;
+	float:left;
+	position:absolute;
+	margin-left:150px;
+
+}
+
+.pieza{
+	float:left;
+}
+.droppable{
+	width:100px;
+	height:151px;
+	border:0px solid #333;
+	background-color:transparent;
+	float:left;
+}
+.droppableP{
+	width:143px;
+	height:143px;
+	border:0px solid #333;
+	background-color:transparent;
+	float:left;
+	margin:-28px;
+}
+.juego{
+	width:128px;
+	height:120px;
+	border:0px solid #333;
+	background-color:#FFF;
+	float:left;
+}
+.ficha{
+	width:64px;
+	height:64px;
+	border:1px solid #FFF;
+	background-repeat:no-repeat;
+	float:left;
+}
+.ficha-cover{
+	width:64px;
+	height:64px;
+	border:0px solid #333;
+	background-color:#EEE;
+	float:left;
+}
+.trabado{
+	display:none;
+}
+.abierto{
+	display:none;
+}
+.seleccionada{
+	border:1px solid #EEE;
+}
+.encontrada{
+	border:1px solid #FFF;
+}
+.encastrado{
+	background-color:#CCEECC;
+}
+
+
+
+
+
+
+
+
+
+#win ul{
+	list-style-type:decimal;
+	list-style-position:outside;
+}
+/* jqModal base Styling courtesy of;
+  Brice Burgess <bhb@iceburg.net> */
+
+/* The Window's CSS z-index value is respected (takes priority). If none is supplied,
+  the Window's z-index value will be set to 3000 by default (in jqModal.js). You
+  can change this value by either;
+    a) supplying one via CSS
+    b) passing the "zIndex" parameter. E.g.  (window).jqm({zIndex: 500}); */
+  
+.jqmWindow {
+    display: none;
+    
+    position: fixed;
+    top: 17%;
+    left: 50%;
+    
+    margin-left: -200px;
+    width: 400px;
+    
+    background-color: #FFF;
+    color: #333;
+    border: 2px solid RED;
+    padding: 9px;
+}
+
+.jqmOverlay { background-color: #000; }
+
+/* Fixed posistioning emulation for IE6
+     Star selector used to hide definition from browsers other than IE6
+     For valid CSS, use a conditional include instead */
+* html .jqmWindow {
+     position: absolute;
+     top: expression((document.documentElement.scrollTop || document.body.scrollTop) + Math.round(17 * (document.documentElement.offsetHeight || document.body.clientHeight) / 100) + 'px');
+}
