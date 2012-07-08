@@ -8,7 +8,21 @@ body {
     font-family: 'Helvetica Neue', Helvetica, sans-serif;
     color: white;
     background-image: url('imgs/main_bg.png');
+    padding: 0;
+    margin: 0;
 }
+
+.grid {
+    border: 1px dotted #B0DEE9;
+    border-width: 1px 0 0 1px;
+}
+
+.grid div {
+    border: 1px dotted #B0DEE9;
+    border-width: 0 1px 1px 0;
+    float: left;
+}
+
 #viewport {
     width: 545px;
     padding: 0;
@@ -268,6 +282,13 @@ gameObj = {
         this.state++;
         this.logs('START "initDashboardPage"');
 
+
+        this.createGrid(
+            100,
+            150,
+            this.schema.board.size.x,
+            this.schema.board.size.y
+        );
 //TODO: DEBUG
 //        this.preloadCards(true);
 
@@ -279,12 +300,24 @@ gameObj = {
 
 
 
-        $('#mycard1').draggable({ grid: [10, 10] });
-        $('#mycard2').draggable({ grid: [20, 20] });
+        $('#mycard1').draggable();
+        $('#mycard2').draggable({
+            grid: [10, 10],
+            drag: function(event, ui) {
+                console.log(event.screenX, event.screenY, ui);
+            }
+        });
         $('#mycard3').draggable({ grid: [30, 30] });
         $('#mycard4').draggable({ grid: [40, 40] });
         $('#mycard5').draggable({ grid: [50, 50] });
         $('#mycard6').draggable({ grid: [100, 50] });
+
+        $("#mycard4").draggable("disable");
+
+        $('#mycard1').draggable({helper: 'clone', opacity: 0.35, zIndex: 20000, cursor: 'move'});
+
+        $('#mycard3').draggable({opacity: 0.65, zIndex: 2000, cursor: 'move'});
+
 
 /*
         $("#players").show();
@@ -304,7 +337,39 @@ gameObj = {
 
         this.initDashboardPage();
     },
+    createGrid : function(sizeX, sizeY, ratioW, ratioH) {
+        this.logs('START "createGrid"');
+        this.logs('sizeX: ' + sizeX);
+        this.logs('sizeY: ' + sizeY);
+        this.logs('ratioW: ' + ratioW);
+        this.logs('ratioH: ' + ratioH);
 
+        if (ratioW === undefined && ratioH === undefined) {
+            var ratioW = Math.floor($(window).width()/sizeX),
+            ratioH = Math.floor($(window).height()/sizeY);
+        }
+
+        var parent = $('<div />', {
+            class: 'grid',
+            width: ratioW  * sizeX,
+            height: ratioH  * sizeY
+        }).addClass('grid').appendTo('body');
+
+        for (var i = 0; i < ratioH; i++) {
+            for(var p = 0; p < ratioW; p++){
+                var ii = i + 1;
+                var pp = p + 1;
+
+                $('<div />', {
+                    id : "grid__" + ii.toString() + "_" + pp.toString(),
+                    width: sizeX - 1,
+                    height: sizeY - 1
+                }).appendTo(parent);
+            }
+        }
+
+        this.logs('START "createGrid"');
+    },
     serverCmd : function(cmd, params) {
         this.logs('START "serverCmd"');
 
