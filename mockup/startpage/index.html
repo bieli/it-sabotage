@@ -48,15 +48,357 @@ body {
     width: 110px;
     text-indent: 0;
 }
+
+#login {
+    margin: 80px auto;
+    padding: 8px 24px;
+    overflow: hidden;
+    height: 263px;
+    background: url('imgs/welcome_bg.png') no-repeat;
+    font-size: 18px;
+    color: #ffffff;
+    height: 263px;
+    border: 1px solid white;
+    -webkit-border-radius: 3px 3px;
+    -webkit-box-shadow: 0 0 12px #000;
+    -moz-border-radius: 3px 3px;
+    -moz-box-shadow: 0 0 12px #000;
+    font-size: 14px;
+    text-align: center;
+}
+
+#login ul {
+    list-style-type: none;
+}
+
+#dashboard {
+    position: absolute;
+    width: 1200px;
+    height: 1200px;
+    padding: 0;
+    margin: 0;
+    background-color: transparent;
+}
+
+#mycards {
+    position: absolute;
+    left: 10px;
+    top: 300px;
+/*    width: 750px;*/
+    background-color: #f0f5FF;
+    border: 1px dotted #ffffff;
+    z-index: 50;
+}
+#mycards_handle {
+    background-color: #88aabb;
+    padding: 0;
+    text-align: center;
+    font-weight: normal;
+    color: #FFFFFF;
+    vertical-align: middle;
+}
+#mycards_content {
+    display: block;
+    left: 10px;
+    width: 100%;
+    padding: 0;
+}
+#mycards_content ul {
+    margin: 5px 5px 5px 5px;
+    width: 100%;
+    list-style: none;
+}
+#mycards_content ul li {
+    float: left;
+    padding: 10px;
+}
+
 </style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
+<script src="http://dev.iceburg.net/jquery/jqDnR/jqDnR.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){
+
+gameObj = {
+    txtName : "IT-Sabotage",
+    txtSlogan : "Hack IT with multiplayer Online Game.",
+    txtPlayBtn : "Play Now!",
+    enableConsoleLogger : false,
+    states : {
+        0 : null,
+        1 : 'GET_GAME_SCHEMA',
+        2 : 'INIT_GAME',
+        3 : 'START_GAME',
+        4 : 'INIT_DASBOARD',
+        5 : 'SHOW_DASBOARD',
+    },
+    state : 0,
+    schema : [],
+    images : [],
+    logs : function(msg) {
+        if (this.enableConsoleLogger) {
+            console.log("[ " + this.state + " ] " + msg);
+        }
+    },
+    setLogger : function(flag) {
+        this.enableConsoleLogger = flag;
+    },
+    setupSchema : function(gameSchemaName) {
+        this.state++;
+        this.logs('START "setupSchema"');
+
+        var schema;
+
+        $.ajax({
+            url: "getGameSchema.php",
+            data: {
+                name : gameSchemaName,
+                hash : Math.round(new Date().getTime())
+            },
+            async: false,
+            dataType: 'json',
+            success: function (data) {
+                schema = data;
+            }
+        });
+
+//        console.log(schema.gameScheme);
+
+        this.schema = schema.gameScheme;
+
+        this.state++;
+        this.logs('STOP "setupSchema"');
+    },
+    initStartPage : function(gameName) {
+        this.state++;
+        this.logs('START "initStartPage"');
+
+        $('#welcome h1').text(this.schema.name);
+
+        $('#welcome h3').text(this.schema.desc);
+
+        $("#play").click(function(){
+            gameObj.logs('START #play clicked !');
+
+            $("#play").hide();
+            $("#welcome").fadeTo("slow", 0.0);
+
+            setTimeout(function() {
+                $("#welcome").remove();
+            }, 1000);
+
+            $("#login").show();
+
+            gameObj.logs('STOP #play clicked !');
+        });
+
+        $("#loginBtn").click(function(){
+            gameObj.logs('START #loginBtn clicked !');
+
+            var nickname = $('#nickname').val().trim();
+
+            gameObj.logs(nickname);
+            gameObj.logs(nickname.length);
+
+            if ( nickname.length >= 4
+                 && nickname.length <= 16 ) {
+
+                var srvResult = gameObj.serverCmd('login', nickname);
+
+                if (srvResult === true) {
+                    $("#login").hide();
+                    $("#login").fadeTo("slow", 0.0);
+
+                    setTimeout(function() {
+                        $("#viewport").remove();
+                    }, 500);
+                } else {
+                    alert('Problem with connecting to game server !');
+                }
+            } else {
+                alert('NICKNAME required min. 4 and max. 16 characters');
+            }
+
+            gameObj.logs('STOP #loginBtn clicked !');
+        });
+
+        this.state++;
+        this.logs('STOP "initStartPage"');
+    },
+    preloadCards : function(with_images) {
+        this.logs('START "preloadCards"');
+
+        console.log(this.schema.cards);
+
+//        if (len(this.schema.cards) > 0) {
+            var n = 0;
+
+            if (with_images === true) {
+                this.images = new Array();
+            }
+
+            for (var i in this.schema.cards) {
+                if (with_images === true) {
+                    var n = this.images.length;
+
+                    this.images[n] = new Image();
+
+                    url = "games/" + this.schema.name + "/images/" + this.schema.cards[i].name + ".png";
+
+                    //this.images[n].onerror = preloadOnError(url) {
+                    //    alert('Problem with preload images from URL: "' + url + '"');
+                    //};
+
+                    this.images[n].src = url;
+
+                    //this.images[n].complete
+                } else {
+                    console.log(this.schema.cards[i].name);
+                }
+            }
+//        } else {
+//            this.logs('Problem with preload cards/images for game dashboard !');
+//        }
+
+        this.logs('STOP "preloadCards"');
+    },
+    initDashboardPage : function() {
+        this.state++;
+        this.logs('START "initDashboardPage"');
+
+//TODO: DEBUG
+//        this.preloadCards(true);
+
+        $('#mycards').draggable({
+            handle: '#mycards_handle'
+        });
+
+        $("#mycards").show();
+
+
+
+        $('#mycard1').draggable();
+        $('#mycard2').draggable();
+        $('#mycard3').draggable();
+        $('#mycard4').draggable();
+        $('#mycard5').draggable();
+        $('#mycard6').draggable();
+
+/*
+        $("#players").show();
+        $("#mycards").show();
+        $("#mypulishedcards").show();
+*/
+        $("#dashboard").show();
+
+        this.state++;
+        this.logs('STOP "initDashboardPage"');
+    },
+
+    init : function(gameName) {
+        this.setupSchema(gameName);
+
+        this.initStartPage(gameName);
+
+        this.initDashboardPage();
+    },
+
+    serverCmd : function(cmd, params) {
+        this.logs('START "serverCmd"');
+
+        this.logs(cmd);
+        this.logs(params);
+
+        this.logs('START "serverCmd"');
+
+        return true;
+    }
+};
+
+var gameName = 'Saboteur';
+
+gameObj.setLogger(true);
+
+gameObj.init(gameName);
+
+/*
+http://stackoverflow.com/questions/2342507/i-want-to-load-multiple-images-very-fast-on-a-website-whats-the-best-method
+http://stackoverflow.com/questions/9624253/jquery-load-multiple-images-after-they-have-all-finished-loading
+
+http://stackoverflow.com/questions/9240763/working-with-for-loop-and-jquery-load-event-for-multiple-images-return-only-the
+
+(function() {
+  var imgs = [ "image1.png", "image2.png" ],
+    index = 0,
+    img;
+
+  (function() {
+    if (index >= imgs.length) return;
+    (img = new Image()).onload = arguments.callee;
+    setTimeout(function() { img.src = "/path/to/images/" + imgs[index++]; }, 1);
+  })();
+ })();
+
+
+
+*/
+});
+
+</script>
 </head>
 <body>
 <div id="viewport">
     <div id="welcome">
         <h1>IT - Sabotage!</h1>
-        <strong>Hack IT</strong> with multiplayer Online Game.
+        <h3>Hack IT with multiplayer Online Game.</h3>
         <a id="play" href="#">Play Now!</a>
     </div>
+
+    <div id="login" style="display: none;">
+        <ul>
+            <li>Please enter Your nickname:</li>
+            <li><input id="nickname" type="text" name="nickname" value="" /></li>
+            <li><input id="loginBtn" type="button" value="Login ..." /></li>
+        </ul>
+    </div>
+</div>
+<div id="dashboard" style="display: none;">
+    <div id="players" style="display: none;">
+        <p>Players</p>
+        <ul id="playerslist">
+            <li id="player1"></li>
+            <li id="player2"></li>
+            <li id="player3"></li>
+            <li id="player4"></li>
+        </ul>
+    </div>
+    <div id="mycards" style="display: none;">
+        <div id="mycards_handle">
+            My cards
+        </div>
+        <div id="mycards_content">
+            <ul id="mycardslist">
+                <li id="mycard1"><img src="games/Saboteur/images/card1.png" /></li>
+                <li id="mycard2"><img src="games/Saboteur/images/card2.png" /></li>
+                <li id="mycard3"><img src="games/Saboteur/images/card3.png" /></li>
+                <li id="mycard4"><img src="games/Saboteur/images/card1.png" /></li>
+                <li id="mycard5"><img src="games/Saboteur/images/card2.png" /></li>
+                <li id="mycard6"><img src="games/Saboteur/images/card3.png" /></li>
+            </ul>
+        </div>
+    </div>
+    <div id="mypulishedcards" style="display: none;">
+        <p>My published cards</p>
+        <ul id="mypulishedcardslist">
+            <li id="mypulishedcard1"></li>
+            <li id="mypulishedcard2"></li>
+            <li id="mypulishedcard3"></li>
+            <li id="mypulishedcard4"></li>
+        </ul>
+    </div>
+
 </div>
 </body>
 </html>
