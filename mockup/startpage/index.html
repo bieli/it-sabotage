@@ -23,6 +23,16 @@ body {
     float: left;
 }
 
+.grid div:hover {
+    background-color: #B0DEE9;
+}
+
+/*
+.bgBlack {
+    background-color: #000000;
+}
+*/
+
 #viewport {
     width: 545px;
     padding: 0;
@@ -130,10 +140,14 @@ body {
 </style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
-<script src="http://dev.iceburg.net/jquery/jqDnR/jqDnR.js"></script>
+<script src="js/json.js"></script> <!-- for ie -->
+<script src="socket.io/socket.io.js"></script> <!-- sockets -->
+
 
 <script type="text/javascript">
 $(document).ready(function(){
+
+var socket = null;
 
 gameObj = {
     txtName : "IT-Sabotage",
@@ -151,6 +165,8 @@ gameObj = {
     state : 0,
     schema : [],
     images : [],
+    socket : null,
+    socketConnected : false,
     logs : function(msg) {
         if (this.enableConsoleLogger) {
             console.log("[ " + this.state + " ] " + msg);
@@ -158,6 +174,23 @@ gameObj = {
     },
     setLogger : function(flag) {
         this.enableConsoleLogger = flag;
+    },
+    getRandom : function(minVal, maxVal)
+    {
+        var randomNum = Math.random() * (maxVal - minVal);
+
+        return (Math.round(randomNum) + minVal);
+    },
+    randColor : function (){
+      colors = ['#ffc7c7','#fff1c7','#e3ffc7',
+                '#c7ffd5','#c7ffff','#c7d5ff',
+                '#e3c7ff','#ffc7f1','#d97979',
+                '#d9c179','#a9d979','#79d991',
+                '#79d9d9','#7991d9','#a979d9','#d979c1'];
+
+      var color = colors[Math.floor(Math.random()*colors.length)];
+
+      return color;
     },
     setupSchema : function(gameSchemaName) {
         this.state++;
@@ -282,13 +315,21 @@ gameObj = {
         this.state++;
         this.logs('START "initDashboardPage"');
 
-
         this.createGrid(
+            '#dashboard',
             100,
             150,
             this.schema.board.size.x,
             this.schema.board.size.y
         );
+/*
+        $(".grid div").bind('mouseover', function() {
+            $(this).addClass("bgBlack");
+        }).bind('mouseout', function() {
+            $(this).removeClass("bgBlack");
+        });
+*/
+
 //TODO: DEBUG
 //        this.preloadCards(true);
 
@@ -300,11 +341,32 @@ gameObj = {
 
 
 
-        $('#mycard1').draggable();
+        $('#mycard1').draggable({
+            opacity: 0.65,
+            zIndex: 1000,
+            cursor: 'move'
+/*,
+//TODO: automatic span to grid prototype solution
+
+            containment: '.grid',
+            stop: function(e, ui) {
+                var left = ui.helper.position().left,
+                    top = ui.helper.position().top;
+
+                ui.helper.css({
+                    left: left - (left % 100),
+                    top: top - (top % 150)
+//                   left: left - (left % this.schema.cards_params.imagesize.x),
+//                    top: top - (top % this.schema.cards_params.imagesize.y)
+                });
+            }
+*/
+        });
         $('#mycard2').draggable({
             grid: [10, 10],
             drag: function(event, ui) {
                 console.log(event.screenX, event.screenY, ui);
+                socket.send('move');
             }
         });
         $('#mycard3').draggable({ grid: [30, 30] });
@@ -313,8 +375,6 @@ gameObj = {
         $('#mycard6').draggable({ grid: [100, 50] });
 
         $("#mycard4").draggable("disable");
-
-        $('#mycard1').draggable({helper: 'clone', opacity: 0.35, zIndex: 20000, cursor: 'move'});
 
         $('#mycard3').draggable({opacity: 0.65, zIndex: 2000, cursor: 'move'});
 
@@ -337,7 +397,7 @@ gameObj = {
 
         this.initDashboardPage();
     },
-    createGrid : function(sizeX, sizeY, ratioW, ratioH) {
+    createGrid : function(appendToElementName, sizeX, sizeY, ratioW, ratioH) {
         this.logs('START "createGrid"');
         this.logs('sizeX: ' + sizeX);
         this.logs('sizeY: ' + sizeY);
@@ -353,7 +413,7 @@ gameObj = {
             class: 'grid',
             width: ratioW  * sizeX,
             height: ratioH  * sizeY
-        }).addClass('grid').appendTo('body');
+        }).addClass('grid').appendTo(appendToElementName);
 
         for (var i = 0; i < ratioH; i++) {
             for(var p = 0; p < ratioW; p++){
@@ -375,6 +435,33 @@ gameObj = {
 
         this.logs(cmd);
         this.logs(params);
+
+//TODO: socket.io prototype connection
+
+        var msg = [ cmd, params ];
+
+        switch (cmd) {
+            case 'login':
+                socket = io.connect('http://localhost:8123');
+
+                var socketConnected = false;
+
+                socket.on('connect', function () {
+                    socketConnected = true;
+//TODO: send complex message
+                    socket.send(msg);
+//                    socket.send('login');
+
+                    socket.on('message', function (msg) {
+                        console.log('my message - on web browser client: ', msg)
+                    });
+                });
+
+                this.socketConnected = socketConnected;
+                this.socket = socket;
+
+                break;
+        }
 
         this.logs('START "serverCmd"');
 

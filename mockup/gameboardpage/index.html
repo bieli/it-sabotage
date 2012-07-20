@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>IT-Sabotage ! :: multiplayer Online Game</title>
+<script src="https://ajax.googleapis.com/ajax/libs//jquery/1.6.1/jquery.min.js"></script>
+<script id="jqueryui" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.10/jquery-ui.min.js" defer async></script>
+
+<style type="text/css">
+body {
+    background-color: #c5f1ff;
+    font-family: 'Helvetica Neue', Helvetica, sans-serif;
+    color: white;
+    background-image: url('imgs/main_bg.png');
+    height:1400px;
+}
+#viewport {
+    width: 545px;
+    padding: 0;
+    margin: 120px auto;
+    background-color: #1D1D1D;
+    background-image: url('imgs/modal_bg.png');
+}
+#welcome {
+    padding: 0;
+    overflow: hidden;
+    height: 263px;
+    background: url('imgs/welcome_bg.png') no-repeat;
+    border: 1px solid white;
+    -webkit-border-radius: 3px 3px;
+    -webkit-box-shadow: 0 0 12px #000;
+    -moz-border-radius: 3px 3px;
+    -moz-box-shadow: 0 0 12px #000;
+    font-size: 14px;
+    text-align: center;
+}
+#welcome h1 {
+    margin: 30px auto 30px auto;
+    font-size: 28px;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+#play {
+    margin: 80px auto;
+    padding: 8px 24px;
+    font-size: 22px;
+    color: #000000;
+    background: url('imgs/start_playing_bg.png') repeat-x;
+    text-decoration: none;
+    -webkit-border-radius: 3px 3px;
+    -moz-border-radius: 3px 3px;
+    display: block;
+    width: 110px;
+    text-indent: 0;
+}
+div.floating-menu {
+    position: fixed;
+    background: #f5f7f0;
+    border: 1px solid #ccf1ff;
+    width: 700px;
+    height: 180px;
+    z-index: 100;
+}
+div.floating-menu a,
+div.floating-menu h3 {
+    display: block;
+    margin: 0 0.5em;
+    font-size: 8px;
+    color: blue;
+}
+
+#footer {
+    position:fixed;
+    bottom: 0;
+    margin: 0;
+    height: 180px;
+    width: 80%;
+    background: #f5f7f0;
+    border: 1px dotted #afafaf;
+}​
+#footer h3 {
+    display: block;
+    margin: 0;
+    font-size: 8px;
+    color: blue;
+}​
+
+#footer div.my-hidden-card-container {
+    width: 90%;
+    margin: 0 auto;
+}
+
+#footer span.my-hidden-card {
+    float: left;
+    width: 110px;
+/*
+    display: inline;
+    margin: 5px 5px 5px 5px;
+    color: orange;
+    width: 100px;
+    height: 151px;
+*/
+}​
+
+/*
+#menu {
+    position: fixed;
+    bottom: 0;
+    height: 480px;
+    width: 20%;
+    background: #f5f7f0;
+    border: 1px dotted #afafaf;
+}​
+*/
+
+</style>
+<script>
+$(function(){
+/*    $("body").animate({scrollTop: $(this).height()}, 1000);*/
+});
+</script>
+</head>
+<body>
+    <div id="viewport">
+    </div>
+<!--
+    <div class="floating-menu">
+        <h3>My hidden cards:</h3>
+        <a href="#">[hid 1]</a>
+        <span class="my-hidden-card" data="{id: 1}">[hd1]</span>
+        <span class="my-hidden-card" data="{id: 2}">[hd2]</span>
+        <span class="my-hidden-card" data="{id: 3}"></span>
+        <span class="my-hidden-card" data="{id: 4}"></span>
+        <span class="my-hidden-card" data="{id: 5}"></span>
+        <span class="my-hidden-card" data="{id: 6}"></span>
+
+        <h3>My visible cards:</h3>
+        <span class="my-visible-card" data="{id: 1}"></span>
+        <span class="my-visible-card" data="{id: 2}"></span>
+        <span class="my-visible-card" data="{id: 3}"></span>
+        <span class="my-visible-card" data="{id: 4}"></span>
+        <span class="my-visible-card" data="{id: 5}"></span>
+        <span class="my-visible-card" data="{id: 6}"></span>
+    </div>
+
+    <div id="menu">
+
+    </div>
+
+-->
+
+    <div id="footer">
+        <h3>My hidden cards:</h3>
+        <div class="my-hidden-card-container">
+        <span class="my-hidden-card" data="{id: 1}"></span>
+        <span class="my-hidden-card" data="{id: 2}"></span>
+        <span class="my-hidden-card" data="{id: 3}"></span>
+        <span class="my-hidden-card" data="{id: 4}"></span>
+        <span class="my-hidden-card" data="{id: 5}"></span>
+        <span class="my-hidden-card" data="{id: 6}"></span>
+        </div>
+    </div>
+
+</body>
+</html>
