@@ -1,0 +1,201 @@
+<head>
+  <title>it-sabotage--meteorjs [ PROTOTYPE ]</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1"> 
+  
+  <link href="/styles/puzzle.css" rel="stylesheet" type="text/css" />
+
+  <script src="/scripts/jquery-1.2.4b.js" type="text/javascript"></script>
+  <script src="/scripts/ui.core.js" type="text/javascript"></script>
+  <script src="/scripts/ui.draggable.js" type="text/javascript"></script>
+  <script src="/scripts/ui.droppable.js" type="text/javascript"></script>
+
+
+<script type="text/javascript">
+	$(window).ready(function(){
+		$("#i-1a").draggable({helper:'original', handle:'.drag',cursor: "move", grid: [ 5,5 ]}); 
+		
+		$("#s-1a > .sensible").droppable({
+      accept: "#i-1a",
+      tolerance: 'intersect',
+      activeClass: 'droppable-active',
+      hoverClass: 'droppable-hover',
+      drop: function() { 
+        $('#s-1a').addClass('s-1a');
+        $('#s-1a').addClass('encastrada');
+        $('#i-1a').remove();
+      }
+		 });
+		 
+		$("#i-1b").draggable({helper:'original', handle:'.drag',cursor: "move", grid: [ 5,5 ]}); 
+		
+		$("#s-1b > .sensible").droppable({
+      accept: "#i-1b",
+      tolerance: 'intersect',
+      activeClass: 'droppable-active',
+      hoverClass: 'droppable-hover',
+      drop: function() { 
+        $('#s-1b').addClass('s-1b');
+        $('#s-1b').addClass('encastrada');
+        $('#i-1b').remove();
+      }
+		 });	
+		 
+		$("#i-1c").draggable({helper:'original', handle:'.drag',cursor: "move", grid: [ 5,5 ]}); 
+		
+		$("#s-1c > .sensible").droppable({
+      accept: "#i-1c",
+      tolerance: 'intersect',
+      activeClass: 'droppable-active',
+      hoverClass: 'droppable-hover',
+      drop: function() { 
+        $('#s-1c').addClass('s-1c');
+        $('#s-1c').addClass('encastrada');
+        $('#i-1c').remove();
+      }
+		 });	
+
+		$("#i-2a").draggable({helper:'original', handle:'.drag',cursor: "move", grid: [ 5,5 ]}); 
+		
+		$("#s-2a > .sensible").droppable({
+      accept: "#i-2a",
+      tolerance: 'intersect',
+      activeClass: 'droppable-active',
+      hoverClass: 'droppable-hover',
+      drop: function() { 
+        $('#s-2a').addClass('s-2a');
+        $('#s-2a').addClass('encastrada');
+        $('#i-2a').remove();
+      }
+		 });	
+
+		$("#i-2b").draggable({helper:'original', handle:'.drag',cursor: "move", grid: [ 5,5 ]}); 
+		
+		$("#s-2b > .sensible").droppable({
+      accept: "#i-2b",
+      tolerance: 'intersect',
+      activeClass: 'droppable-active',
+      hoverClass: 'droppable-hover',
+      drop: function() { 
+        $('#s-2b').addClass('s-2b');
+        $('#s-2b').addClass('encastrada');
+        $('#i-2b').remove();
+      }
+		 });	
+
+		$("#i-2c").draggable({helper:'original', handle:'.drag',cursor: "move", grid: [ 5,5 ]}); 
+		
+		$("#s-2c > .sensible").droppable({
+      accept: "#i-2c",
+      tolerance: 'intersect',
+      activeClass: 'droppable-active',
+      hoverClass: 'droppable-hover',
+      drop: function() { 
+        $('#s-2c').addClass('s-2c');
+        $('#s-2c').addClass('encastrada');
+        $('#i-2c').remove();
+      }
+		 });
+	});
+
+</script>
+<style type="text/css">
+
+.s-1a {
+  background-image:url(/images/1a.png);
+  background-repeat:no-repeat;
+  background-position:center center;
+}
+.s-1b {
+  background-image:url(/images/1b.png);
+  background-repeat:no-repeat;
+  background-position:center center;
+}
+.s-1c {
+  background-image:url(/images/1c.png);
+  background-repeat:no-repeat;
+  background-position:center center;
+}
+
+.s-2a {
+  background-image:url(/images/2a.png);
+  background-repeat:no-repeat;
+  background-position:center center;
+}
+.s-2b {
+  background-image:url(/images/2b.png);
+  background-repeat:no-repeat;
+  background-position:center center;
+}
+.s-2c {
+  background-image:url(/images/2c.png);
+  background-repeat:no-repeat;
+  background-position:center center;
+}
+
+.drag{
+	margin-left:23px;
+	width:100px;
+	height:142px;
+  border: 0px dotted red;
+}
+.sensible{
+	margin:20px;
+	width:100px;
+	height:151px;
+	border:0px solid orange;
+}
+#canvas{
+	width:261px;
+	height:176px;
+	background-color:#EEE;
+	float:left;
+}
+#canvasFinal{
+	width:261px;
+	height:176px;
+	background-image:url(img/puzzle/saboteur/completo.png);
+	background-repeat:no-repeat;
+	background-position:center center;
+	float:left;
+	position:absolute;
+	display:none;
+	z-index:9;
+}
+
+</style>
+
+</head>
+
+<body>
+  {{> main}}
+</body>
+
+<template name="main">
+  <h1>{{welcome}}</h1>
+  <p>{{> status }}</p>
+
+  <p>Selected name: <strong>{{selected_name}}</strong></p>
+  
+  <div>
+      <div class="puzzle" style="width:660px;">
+      {{#each cards}}
+        {{> card}}
+      {{/each}}
+      </div>
+  </div>
+</template>
+
+<template name="status">
+<!--
+  Meteor status: {{#if status}}<i class="green">connected</i>{{ else }}<i class="red">disconnected</i>{{/if}}
+-->
+</template>
+
+<template name="card">
+  <div class="s-{{name}}" id="i-{{name}}" data-name="{{name}}" style="width:143px; height:143px; position:absolute; top:{{top}}px; left:{{left}}px;" >
+    <div class="drag"></div>
+  </div>
+</template>
+
+
